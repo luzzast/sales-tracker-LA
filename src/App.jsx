@@ -177,7 +177,7 @@ export default function SalesTracker() {
         {/* Logo Section */}
         <div className="flex justify-center items-center mb-8">
           <img 
-            src="https://cdn.glitch.global/62343cea-1f00-4e76-b176-437992c58298/image.png?v=1736582396914" 
+            src="assets/LA.png" 
             alt="LA Store Logo" 
             className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain"
           />
