@@ -225,7 +225,7 @@ export default function SalesTracker() {
             />
             <input
               type="number"
-              placeholder="Cash price"
+              placeholder="Cash Collection"
               value={cashPrice}
               onChange={(e) => setCashPrice(e.target.value)}
               className="border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -233,7 +233,7 @@ export default function SalesTracker() {
             />
             <input
               type="number"
-              placeholder="Online price"
+              placeholder="Online Collection"
               value={onlinePrice}
               onChange={(e) => setOnlinePrice(e.target.value)}
               className="border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -324,7 +324,7 @@ export default function SalesTracker() {
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Qty</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Cash</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Online</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Price</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Collection</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Capital</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Sales</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Profit</th>
