@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, TrendingUp, DollarSign, ShoppingCart, Trash2, RefreshCw } from 'lucide-react';
+import logo from './assests/LA.png';
 
 // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzV5noaEz1KPiFUSbu5IHhO-U3Rb6r5ImiTcSvuflsXMTMqL1zj5AXDIktrbLJEc8kxsQ/exec';
@@ -177,7 +178,7 @@ export default function SalesTracker() {
         {/* Logo Section */}
         <div className="flex justify-center items-center mb-8">
           <img 
-            src="assets/LA.png" 
+            src="{logo}" 
             alt="LA Store Logo" 
             className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain"
           />
