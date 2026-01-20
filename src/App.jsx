@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlusCircle, TrendingUp, DollarSign, ShoppingCart, Trash2, RefreshCw } from 'lucide-react';
 
 // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzV5noaEz1KPiFUSbu5IHhO-U3Rb6r5ImiTcSvuflsXMTMqL1zj5AXDIktrbLJEc8kxsQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybyDgS7xIDjUOVo7R6hDXZkF5b0y7Z-PugfbM6XUd__CNjzy9FA42qUQdRpcOqvA9ZZQ/exec';
 
 export default function SalesTracker() {
   const [sales, setSales] = useState([]);
@@ -14,6 +14,7 @@ export default function SalesTracker() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [activeCategory, setActiveCategory] = useState('Beverage');
 
   // Load sales from Google Sheets
   const loadSales = async () => {
@@ -28,6 +29,7 @@ export default function SalesTracker() {
         id: sale.id,
         date: sale.date,
         itemName: sale.itemName,
+        category: sale.category || 'Beverage',
         cashPrice: parseFloat(sale.cashPrice) || 0,
         onlinePrice: parseFloat(sale.onlinePrice) || 0,
         sellingPrice: parseFloat(sale.cashPrice || 0) + parseFloat(sale.onlinePrice || 0),
@@ -80,6 +82,7 @@ export default function SalesTracker() {
       id: id,
       date: date,
       itemName: itemName,
+      category: activeCategory,
       cashPrice: cash,
       onlinePrice: online,
       capital: parseFloat(capital),
@@ -148,7 +151,8 @@ export default function SalesTracker() {
   };
 
   const getTotals = () => {
-    return sales.reduce((acc, sale) => ({
+    const categorySales = sales.filter(s => s.category === activeCategory);
+    return categorySales.reduce((acc, sale) => ({
       totalSales: acc.totalSales + sale.totalSales,
       totalCapital: acc.totalCapital + sale.totalCapital,
       totalProfit: acc.totalProfit + sale.profit,
@@ -158,7 +162,7 @@ export default function SalesTracker() {
   };
 
   const getDailyTotals = (selectedDate) => {
-    const dailySales = sales.filter(s => s.date === selectedDate);
+    const dailySales = sales.filter(s => s.date === selectedDate && s.category === activeCategory);
     return dailySales.reduce((acc, sale) => ({
       totalSales: acc.totalSales + sale.totalSales,
       totalCapital: acc.totalCapital + sale.totalCapital,
@@ -170,6 +174,7 @@ export default function SalesTracker() {
 
   const totals = getTotals();
   const dailyTotals = getDailyTotals(date);
+  const categorySales = sales.filter(s => s.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -177,10 +182,36 @@ export default function SalesTracker() {
         {/* Logo Section */}
         <div className="flex justify-center items-center mb-8">
           <img 
-            src="/LA.png" 
+            src="https://cdn.glitch.global/62343cea-1f00-4e76-b176-437992c58298/image.png?v=1736582396914" 
             alt="LA Store Logo" 
             className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain"
           />
+        </div>
+
+        {/* Navigation Bar */}
+        <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
+          <div className="flex flex-wrap gap-2 justify-center">
+            <button
+              onClick={() => setActiveCategory('Beverage')}
+              className={`px-6 py-2 rounded-lg font-semibold transition ${
+                activeCategory === 'Beverage'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Beverage
+            </button>
+            <button
+              onClick={() => setActiveCategory('Keropok')}
+              className={`px-6 py-2 rounded-lg font-semibold transition ${
+                activeCategory === 'Keropok'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Keropok
+            </button>
+          </div>
         </div>
 
         {/* Message Banner */}
@@ -194,7 +225,7 @@ export default function SalesTracker() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
               <ShoppingCart className="text-indigo-600" />
-              Sales Tracker
+              {activeCategory} Sales Tracker
             </h1>
             <button
               onClick={loadSales}
@@ -225,7 +256,7 @@ export default function SalesTracker() {
             />
             <input
               type="number"
-              placeholder="Cash Collection"
+              placeholder="Cash price"
               value={cashPrice}
               onChange={(e) => setCashPrice(e.target.value)}
               className="border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -233,7 +264,7 @@ export default function SalesTracker() {
             />
             <input
               type="number"
-              placeholder="Online Collection"
+              placeholder="Online price"
               value={onlinePrice}
               onChange={(e) => setOnlinePrice(e.target.value)}
               className="border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -324,7 +355,7 @@ export default function SalesTracker() {
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Qty</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Cash</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Online</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Collection</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Price</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Capital</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Sales</th>
                   <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Profit</th>
@@ -332,20 +363,20 @@ export default function SalesTracker() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {loading && sales.length === 0 ? (
+                {loading && categorySales.length === 0 ? (
                   <tr>
                     <td colSpan="10" className="px-4 py-8 text-center text-gray-500">
                       Loading sales data...
                     </td>
                   </tr>
-                ) : sales.length === 0 ? (
+                ) : categorySales.length === 0 ? (
                   <tr>
                     <td colSpan="10" className="px-4 py-8 text-center text-gray-500">
-                      No sales recorded yet. Add your first sale above!
+                      No {activeCategory.toLowerCase()} sales recorded yet. Add your first sale above!
                     </td>
                   </tr>
                 ) : (
-                  sales.map(sale => (
+                  categorySales.map(sale => (
                     <tr key={sale.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm text-gray-700">{sale.date}</td>
                       <td className="px-4 py-3 text-sm font-medium text-gray-900">{sale.itemName}</td>
